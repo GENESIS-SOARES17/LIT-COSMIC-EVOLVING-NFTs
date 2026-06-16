@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const fs = require('fs');
 
-const CONTRACT_ADDRESS = "0x578c1650AB432801839D385A54EAae4f4d7a7A7C";
+const CONTRACT_ADDRESS = "0x887aD23913A2579f9B57f6D0a71D87C14EA2EF40";
 
 async function main() {
   const count = parseInt(process.env.COUNT) || 5;

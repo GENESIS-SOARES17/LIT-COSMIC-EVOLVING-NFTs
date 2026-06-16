@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
             --primary: #ff00ff;
             --secondary: #00ffff;
@@ -20,7 +19,6 @@
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
-        
         body {
             background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
             color: white;
@@ -28,8 +26,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
-        /* Partículas de fundo */
         #particles-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -37,11 +33,7 @@
             z-index: -1;
             pointer-events: none;
         }
-        
-        /* Container principal */
         .container { max-width: 1800px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-        
-        /* Header com gradiente animado */
         .header {
             text-align: center;
             padding: 40px 20px;
@@ -51,7 +43,6 @@
             margin-bottom: 30px;
             border: 1px solid var(--glass-border);
         }
-        
         .header h1 {
             font-size: 3.5em;
             background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
@@ -61,16 +52,12 @@
             animation: gradient 3s ease infinite;
             margin-bottom: 10px;
         }
-        
         @keyframes gradient {
             0% { background-position: 0% center; }
             50% { background-position: 100% center; }
             100% { background-position: 0% center; }
         }
-        
         .subtitle { opacity: 0.8; font-size: 1.2em; }
-        
-        /* Tabs de navegação */
         .tabs {
             display: flex;
             justify-content: center;
@@ -78,7 +65,6 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
-        
         .tab {
             padding: 15px 30px;
             background: var(--glass-bg);
@@ -90,35 +76,20 @@
             backdrop-filter: blur(10px);
             font-size: 1em;
         }
-        
-        .tab:hover {
-            transform: translateY(-3px);
-            border-color: var(--secondary);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-        }
-        
-        .tab.active {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-color: transparent;
-        }
-        
-        /* Conteúdo das tabs */
+        .tab:hover { transform: translateY(-3px); border-color: var(--secondary); }
+        .tab.active { background: linear-gradient(90deg, var(--primary), var(--secondary)); border-color: transparent; }
         .tab-content { display: none; animation: fadeIn 0.5s ease; }
         .tab-content.active { display: block; }
-        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Cards de estatísticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
         .stat-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -127,45 +98,16 @@
             text-align: center;
             backdrop-filter: blur(20px);
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
-        }
-        
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3); }
         .stat-value {
             font-size: 2.5em;
             font-weight: bold;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
-            z-index: 1;
         }
-        
-        .stat-label { opacity: 0.8; margin-top: 10px; position: relative; z-index: 1; }
-        
-        /* Botões */
+        .stat-label { opacity: 0.8; margin-top: 10px; }
         .btn {
             padding: 15px 30px;
             border: none;
@@ -176,41 +118,10 @@
             font-size: 1.1em;
             transition: all 0.3s;
             margin: 5px;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.5);
-        }
-        
-        .btn:active::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            animation: ripple 0.6s ease-out;
-        }
-        
-        @keyframes ripple {
-            to { width: 300px; height: 300px; opacity: 0; }
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-        }
-        
-        .btn-success {
-            background: linear-gradient(90deg, #00ff00, #00aa00);
-        }
-        
-        /* Painel de Mint em Massa */
+        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(255, 0, 255, 0.5); }
+        .btn-secondary { background: linear-gradient(90deg, var(--accent), var(--primary)); }
+        .btn-success { background: linear-gradient(90deg, #00ff00, #00aa00); }
         .mint-panel {
             background: var(--glass-bg);
             border: 2px solid var(--glass-border);
@@ -219,57 +130,29 @@
             margin-bottom: 30px;
             backdrop-filter: blur(20px);
         }
-        
-        .mint-panel h3 {
-            color: var(--secondary);
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        
+        .mint-panel h3 { color: var(--secondary); margin-bottom: 20px; font-size: 1.8em; }
         .mint-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
-        
-        .control-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .control-group label {
-            margin-bottom: 8px;
-            opacity: 0.9;
-            font-size: 0.95em;
-        }
-        
-        .control-group input,
-        .control-group select {
+        .control-group { display: flex; flex-direction: column; }
+        .control-group label { margin-bottom: 8px; opacity: 0.9; }
+        .control-group input, .control-group select {
             padding: 12px;
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid var(--glass-border);
             border-radius: 12px;
             color: white;
             font-size: 1em;
-            transition: all 0.3s;
         }
-        
-        .control-group input:focus,
-        .control-group select:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-        }
-        
-        /* Grid de NFTs */
         .nft-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-top: 30px;
         }
-        
         .nft-card {
             background: var(--glass-bg);
             border: 2px solid var(--glass-border);
@@ -280,50 +163,25 @@
             position: relative;
             backdrop-filter: blur(20px);
         }
-        
         .nft-card:hover {
             transform: translateY(-10px) scale(1.02);
             border-color: var(--secondary);
             box-shadow: 0 20px 50px rgba(0, 255, 255, 0.4);
         }
-        
         .nft-card.selected {
             border-color: var(--primary);
             box-shadow: 0 0 40px rgba(255, 0, 255, 0.6);
             animation: pulse 2s infinite;
         }
-        
-        .nft-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 15px; right: 15px;
-            background: var(--primary);
-            color: white;
-            width: 35px; height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            z-index: 10;
-        }
-        
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 40px rgba(255, 0, 255, 0.6); }
             50% { box-shadow: 0 0 60px rgba(255, 0, 255, 0.9); }
         }
-        
-        .nft-card.mutant {
-            border-color: var(--primary);
-            animation: mutantGlow 2s infinite;
-        }
-        
+        .nft-card.mutant { border-color: var(--primary); animation: mutantGlow 2s infinite; }
         @keyframes mutantGlow {
             0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 255, 0.5); }
             50% { box-shadow: 0 0 60px rgba(255, 0, 255, 1); }
         }
-        
         .nft-image {
             width: 100%;
             height: 300px;
@@ -331,27 +189,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .nft-image svg {
-            animation: rotate 20s linear infinite;
-            transition: transform 0.3s;
-        }
-        
-        .nft-card:hover .nft-image svg {
-            animation: rotate 5s linear infinite;
-            transform: scale(1.1);
-        }
-        
+        .nft-image svg { animation: rotate 20s linear infinite; }
+        .nft-card:hover .nft-image svg { animation: rotate 5s linear infinite; transform: scale(1.1); }
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        
         .nft-info { padding: 20px; }
-        
         .nft-name {
             font-size: 1.3em;
             font-weight: bold;
@@ -360,14 +205,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
-        .nft-detail {
-            display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-            font-size: 0.95em;
-        }
-        
+        .nft-detail { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.95em; }
         .badge {
             display: inline-block;
             padding: 5px 12px;
@@ -376,17 +214,9 @@
             margin: 3px;
             font-weight: bold;
         }
-        
         .badge-gen { background: var(--secondary); color: black; }
-        .badge-mutant { background: var(--primary); color: white; animation: badgePulse 1.5s infinite; }
+        .badge-mutant { background: var(--primary); color: white; }
         .badge-shape { background: var(--accent); color: black; }
-        
-        @keyframes badgePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        /* Botões de ação no card */
         .card-actions {
             position: absolute;
             top: 15px;
@@ -395,7 +225,6 @@
             gap: 10px;
             z-index: 5;
         }
-        
         .card-btn {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--secondary);
@@ -405,22 +234,13 @@
             cursor: pointer;
             font-size: 0.9em;
             transition: all 0.3s;
-            font-weight: bold;
         }
-        
-        .card-btn:hover {
-            background: var(--secondary);
-            color: black;
-            transform: scale(1.1);
-        }
-        
-        /* Zona de Drop para Fusão */
+        .card-btn:hover { background: var(--secondary); color: black; transform: scale(1.1); }
         .drop-zone {
             border: 3px dashed var(--glass-border);
             border-radius: 20px;
             padding: 40px;
             text-align: center;
-            transition: all 0.3s;
             margin: 20px 0;
             min-height: 200px;
             display: flex;
@@ -428,49 +248,26 @@
             justify-content: center;
             flex-direction: column;
         }
-        
-        .drop-zone.drag-over {
-            border-color: var(--secondary);
-            background: rgba(0, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-        
-        .drop-zone h3 {
-            color: var(--secondary);
-            margin-bottom: 15px;
-        }
-        
-        /* Preview de Fusão */
         .fusion-preview {
             background: var(--glass-bg);
             border: 2px solid var(--primary);
             border-radius: 20px;
             padding: 30px;
             margin: 20px 0;
-            backdrop-filter: blur(20px);
         }
-        
         .preview-content {
             display: grid;
             grid-template-columns: 1fr auto 1fr auto 1fr;
             gap: 20px;
             align-items: center;
         }
-        
         .preview-nft {
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
         }
-        
-        .preview-arrow {
-            font-size: 3em;
-            color: var(--primary);
-            animation: pulse 2s infinite;
-        }
-        
-        /* Modal 3D */
+        .preview-arrow { font-size: 3em; color: var(--primary); }
         .modal {
             display: none;
             position: fixed;
@@ -480,11 +277,8 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(10px);
         }
-        
-        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
-        
+        .modal.active { display: flex; }
         .modal-content {
             width: 90%;
             max-width: 1200px;
@@ -493,10 +287,7 @@
             border-radius: 25px;
             border: 2px solid var(--secondary);
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 80px rgba(0, 255, 255, 0.5);
         }
-        
         .modal-close {
             position: absolute;
             top: 20px; right: 20px;
@@ -511,48 +302,30 @@
             justify-content: center;
             border: none;
             z-index: 1001;
-            transition: all 0.3s;
         }
-        
         .modal-close:hover { background: rgba(255, 0, 0, 1); transform: scale(1.1); }
-        
-        /* Toast Notifications */
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
-        
         .toast {
             background: var(--glass-bg);
             border: 2px solid var(--secondary);
             border-radius: 15px;
             padding: 20px 30px;
-            backdrop-filter: blur(20px);
+            margin-bottom: 10px;
             animation: slideIn 0.3s ease;
             min-width: 300px;
         }
-        
         @keyframes slideIn {
             from { transform: translateX(400px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
         .toast.success { border-color: #00ff00; }
         .toast.error { border-color: #ff0000; }
-        .toast.warning { border-color: #ffaa00; }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.5em;
-        }
-        
+        .loading { text-align: center; padding: 50px; font-size: 1.5em; }
         .spinner {
             border: 4px solid rgba(255, 255, 255, 0.1);
             border-left-color: var(--secondary);
@@ -562,23 +335,117 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        /* Árvore Genealógica */
+        .tree-container {
+            overflow-x: auto;
+            padding: 40px 20px;
+            min-height: 400px;
         }
+        .tree-generation {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .tree-gen-title {
+            font-size: 1.8em;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+        .tree-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .tree-node {
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tree-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
+            border-color: var(--secondary);
+        }
+        .tree-node.mutant {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        .tree-node-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+        .tree-node-id { font-weight: bold; font-size: 1.2em; margin-bottom: 8px; }
+        .tree-node-info { font-size: 0.9em; opacity: 0.8; }
+        .tree-node-mutant { color: var(--primary); font-weight: bold; margin-top: 8px; }
+        .tree-node-parents { font-size: 0.8em; opacity: 0.7; margin-top: 10px; }
         
-        /* Responsivo */
+        /* Histórico */
+        .history-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+        .history-item:hover {
+            transform: translateX(10px);
+            border-color: var(--secondary);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+        }
+        .history-icon {
+            font-size: 2.5em;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.1);
+        }
+        .history-content { flex: 1; }
+        .history-title { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
+        .history-details { opacity: 0.8; font-size: 0.9em; }
+        .history-time { opacity: 0.6; font-size: 0.85em; }
+        .history-mint { border-left: 4px solid #00ff00; }
+        .history-fusion { border-left: 4px solid var(--primary); }
+        
         @media (max-width: 768px) {
             .header h1 { font-size: 2em; }
             .nft-grid { grid-template-columns: 1fr; }
             .preview-content { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; }
         }
-    </style>
+    
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+</style>
 </head>
 <body>
     <canvas id="particles-canvas"></canvas>
-    
     <div class="toast-container" id="toastContainer"></div>
     
     <div class="container">
@@ -587,7 +454,6 @@
             <p class="subtitle">Premium Edition - 25 Formas + 50 Cores + Visual 3D</p>
         </div>
         
-        <!-- Tabs -->
         <div class="tabs">
             <div class="tab active" onclick="switchTab('gallery')">️ Galeria</div>
             <div class="tab" onclick="switchTab('mint')">🎨 Mint</div>
@@ -597,7 +463,7 @@
             <div class="tab" onclick="switchTab('history')">📝 Histórico</div>
         </div>
         
-        <!-- Tab: Galeria -->
+        <!-- GALERIA -->
         <div id="gallery" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -617,25 +483,23 @@
                     <div class="stat-label">Mutantes</div>
                 </div>
             </div>
-            
             <div style="text-align:center;margin-bottom:30px;">
                 <button class="btn" onclick="loadNFTs()">🔄 Atualizar</button>
-                <button class="btn btn-secondary" onclick="exportData()">💾 Exportar Dados</button>
+                <button class="btn btn-secondary" onclick="exportData()">💾 Exportar</button>
                 <button class="btn btn-success" onclick="randomMint()">🎲 Mint Aleatório</button>
             </div>
-            
             <div id="nftGrid" class="nft-grid">
                 <div class="loading"><div class="spinner"></div>Carregando NFTs...</div>
             </div>
         </div>
         
-        <!-- Tab: Mint -->
+        <!-- MINT -->
         <div id="mint" class="tab-content">
             <div class="mint-panel">
                 <h3> Mint em Massa</h3>
                 <div class="mint-controls">
                     <div class="control-group">
-                        <label>Quantidade de NFTs</label>
+                        <label>Quantidade</label>
                         <input type="number" id="mintCount" min="1" max="50" value="5">
                     </div>
                     <div class="control-group">
@@ -646,29 +510,22 @@
                 <button class="btn" onclick="batchMint()">🚀 Iniciar Mint em Massa</button>
                 <button class="btn btn-secondary" onclick="mintSingle()">✨ Mint Único</button>
             </div>
-            
             <div id="mintProgress" style="display:none;" class="mint-panel">
-                <h3>⏳ Progresso do Mint</h3>
+                <h3>⏳ Progresso</h3>
                 <div class="stat-value" id="mintProgressText">0/0</div>
-                <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:30px;margin-top:20px;overflow:hidden;">
+                <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:30px;margin-top:20px;">
                     <div id="mintProgressBar" style="background:linear-gradient(90deg,var(--primary),var(--secondary));height:100%;width:0%;transition:width 0.3s;"></div>
                 </div>
             </div>
         </div>
         
-        <!-- Tab: Fusão -->
+        <!-- FUSÃO -->
         <div id="fusion" class="tab-content">
             <div class="mint-panel">
-                <h3>🔥 Fusão de NFTs (Drag & Drop)</h3>
-                <p style="opacity:0.8;margin-bottom:20px;">Arraste dois NFTs para a zona abaixo ou clique nos cards na galeria</p>
-                
-                <div class="drop-zone" id="dropZone">
-                    <h3>📦 Arraste NFTs aqui</h3>
-                    <p>ou clique em "Modo Seleção" na galeria</p>
-                </div>
-                
+                <h3>🔥 Fusão de NFTs</h3>
+                <p style="opacity:0.8;margin-bottom:20px;">Clique nos NFTs na galeria para selecionar</p>
                 <div id="fusionPreview" style="display:none;" class="fusion-preview">
-                    <h3 style="color:var(--secondary);margin-bottom:20px;">👁️ Preview da Fusão</h3>
+                    <h3 style="color:var(--secondary);margin-bottom:20px;">👁️ Preview</h3>
                     <div class="preview-content">
                         <div class="preview-nft" id="previewParent1">NFT 1</div>
                         <div class="preview-arrow">+</div>
@@ -676,41 +533,40 @@
                         <div class="preview-arrow">→</div>
                         <div class="preview-nft" id="previewChild">Filho</div>
                     </div>
-                    <button class="btn" onclick="confirmFusion()" style="margin-top:20px;">✅ Confirmar Fusão</button>
+                    <button class="btn" onclick="confirmFusion()" style="margin-top:20px;">✅ Confirmar</button>
                 </div>
             </div>
         </div>
         
-        <!-- Tab: Árvore -->
+        <!-- ÁRVORE GENEALÓGICA -->
         <div id="tree" class="tab-content">
             <div class="mint-panel">
                 <h3>🌳 Árvore Genealógica</h3>
                 <div id="treeVisualization">
-                    <div class="loading">Carregando árvore...</div>
+                    <div class="loading"><div class="spinner"></div>Carregando árvore...</div>
                 </div>
             </div>
         </div>
         
-        <!-- Tab: Estatísticas -->
+        <!-- ESTATÍSTICAS -->
         <div id="stats" class="tab-content">
             <div class="mint-panel">
-                <h3>📊 Dashboard de Estatísticas</h3>
+                <h3>📊 Dashboard</h3>
                 <canvas id="statsChart" style="max-height:400px;"></canvas>
             </div>
         </div>
         
-        <!-- Tab: Histórico -->
+        <!-- HISTÓRICO -->
         <div id="history" class="tab-content">
             <div class="mint-panel">
                 <h3>📝 Histórico de Transações</h3>
-                <div id="transactionHistory">
-                    <div class="loading">Carregando histórico...</div>
+                <div id="transactionHistory" class="history-list">
+                    <div class="loading"><div class="spinner"></div>Carregando histórico...</div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Modal 3D -->
     <div class="modal" id="modal3d">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal3D()"></button>
@@ -719,7 +575,7 @@
     </div>
 
     <script>
-        // ===== PARTÍCULAS INTERATIVAS =====
+        // ===== PARTÍCULAS =====
         const particlesCanvas = document.getElementById('particles-canvas');
         const pCtx = particlesCanvas.getContext('2d');
         let particles = [];
@@ -731,11 +587,7 @@
         }
         resizeParticles();
         window.addEventListener('resize', resizeParticles);
-        
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
         
         class Particle {
             constructor() { this.reset(); }
@@ -751,18 +603,12 @@
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                
-                // Interação com mouse
                 if (mouse.x != null) {
                     const dx = mouse.x - this.x;
                     const dy = mouse.y - this.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) {
-                        this.x -= dx * 0.01;
-                        this.y -= dy * 0.01;
-                    }
+                    if (distance < 100) { this.x -= dx * 0.01; this.y -= dy * 0.01; }
                 }
-                
                 if (this.x < 0 || this.x > particlesCanvas.width) this.speedX *= -1;
                 if (this.y < 0 || this.y > particlesCanvas.height) this.speedY *= -1;
             }
@@ -775,9 +621,7 @@
                 pCtx.globalAlpha = 1;
             }
         }
-        
         for (let i = 0; i < 150; i++) particles.push(new Particle());
-        
         function animateParticles() {
             pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -786,7 +630,7 @@
         animateParticles();
 
         // ===== CONTRATO =====
-        const CONTRACT_ADDRESS = "0x578c1650AB432801839D385A54EAae4f4d7a7A7C";
+        const CONTRACT_ADDRESS = "NOVO_ENDERECO_AQUI";
         const RPC_URL = "https://liteforge.rpc.caldera.xyz/http";
         const CHAIN_ID = 4441;
         
@@ -814,7 +658,6 @@
         function getRotationFromSeed(seed) { return Number((seed >> 16n) % 360n); }
         function getSizeFromSeed(seed) { return Number(50n + (seed >> 24n) % 101n); }
 
-        // ===== TOAST NOTIFICATIONS =====
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -824,13 +667,11 @@
             setTimeout(() => toast.remove(), 5000);
         }
 
-        // ===== TABS =====
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
-            
             if (tabName === 'stats') loadStats();
             if (tabName === 'tree') loadTree();
             if (tabName === 'history') loadHistory();
@@ -844,67 +685,57 @@
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const userContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-                
                 showToast("🎨 Enviando transação...");
                 const tx = await userContract.mintEntity({ gasLimit: 500000 });
                 showToast("⏳ Transação enviada!");
                 await tx.wait();
-                showToast("✅ NFT criado com sucesso!", "success");
+                showToast("✅ NFT criado!", "success");
+                transactionHistory.push({ type: 'mint', tokenId: Date.now(), txHash: tx.hash, timestamp: new Date() });
                 await loadNFTs();
-            } catch (e) {
-                showToast(" Erro: " + e.message, "error");
-            }
+            } catch (e) { showToast(" Erro: " + e.message, "error"); }
         }
 
         async function batchMint() {
             const count = parseInt(document.getElementById('mintCount').value);
             const interval = parseInt(document.getElementById('mintInterval').value) * 1000;
-            
             if (!window.ethereum) { showToast("MetaMask não detectada!", "error"); return; }
-            
             document.getElementById('mintProgress').style.display = 'block';
             document.getElementById('mintProgressText').textContent = `0/${count}`;
             document.getElementById('mintProgressBar').style.width = '0%';
-            
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const userContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-                
                 for (let i = 0; i < count; i++) {
                     showToast(`🎨 Mintando NFT ${i + 1}/${count}...`);
                     const tx = await userContract.mintEntity({ gasLimit: 500000 });
                     await tx.wait();
-                    
+                    transactionHistory.push({ type: 'mint', tokenId: Date.now(), txHash: tx.hash, timestamp: new Date() });
                     const progress = ((i + 1) / count) * 100;
                     document.getElementById('mintProgressText').textContent = `${i + 1}/${count}`;
                     document.getElementById('mintProgressBar').style.width = `${progress}%`;
-                    
                     if (i < count - 1) await new Promise(resolve => setTimeout(resolve, interval));
                 }
-                
-                showToast(`✅ ${count} NFTs criados com sucesso!`, "success");
+                showToast(`✅ ${count} NFTs criados!`, "success");
                 await loadNFTs();
-            } catch (e) {
-                showToast("❌ Erro: " + e.message, "error");
-            }
+            } catch (e) { showToast("❌ Erro: " + e.message, "error"); }
         }
 
-        async function randomMint() {
-            await mintSingle();
-        }
+        async function randomMint() { await mintSingle(); }
 
         // ===== CARREGAR NFTs =====
+        
         async function loadNFTs() {
             const grid = document.getElementById('nftGrid');
             grid.innerHTML = '<div class="loading"><div class="spinner"></div>Carregando NFTs...</div>';
             
             try {
+                // Chamar contrato SEM tentar resolver nomes
                 const nextId = await contract.nextTokenId();
                 const total = Number(nextId) - 1;
-                const fusions = await contract.totalFusions();
                 
+                const fusions = await contract.totalFusions();
                 document.getElementById('totalFusions').textContent = fusions.toString();
                 
                 if (total === 0) {
@@ -912,8 +743,7 @@
                     return;
                 }
                 
-                let maxGen = 0;
-                let mutants = 0;
+                let maxGen = 0, mutants = 0;
                 const entities = [];
                 
                 for (let i = 1; i < nextId; i++) {
@@ -933,44 +763,25 @@
                         if (generation > maxGen) maxGen = generation;
                         if (isMutant) mutants++;
                         
-                        entities.push({ id: i, generation, parent1, parent2, isMutant, shapeType, colorIndex, rotation, size });
-                    } catch (e) { console.error(`Erro NFT #${i}:`, e); }
+                        entities.push({
+                            id: i,
+                            generation,
+                            parent1,
+                            parent2,
+                            isMutant,
+                            shapeType,
+                            colorIndex,
+                            rotation,
+                            size
+                        });
+                    } catch (e) {
+                        console.error(`Erro NFT #${i}:`, e);
+                    }
                 }
                 
                 grid.innerHTML = '';
                 entities.forEach(entity => {
-                    const card = document.createElement('div');
-                    card.className = 'nft-card';
-                    card.dataset.tokenId = entity.id;
-                    if (entity.isMutant) card.classList.add('mutant');
-                    if (selectedNFTs.includes(entity.id)) card.classList.add('selected');
-                    
-                    const svg = generateShapeSVG(entity.shapeType, entity.colorIndex, entity.rotation, entity.size, entity.isMutant);
-                    
-                    card.innerHTML = `
-                        <div class="card-actions">
-                            <button class="card-btn" onclick="event.stopPropagation(); openModal3D(${entity.shapeType}, ${entity.colorIndex}, ${entity.isMutant})">🎥 3D</button>
-                            <button class="card-btn" onclick="event.stopPropagation(); shareNFT(${entity.id})">🔗</button>
-                        </div>
-                        <div class="nft-image">${svg}</div>
-                        <div class="nft-info">
-                            <div class="nft-name">NFT #${entity.id}</div>
-                            <div class="nft-detail">
-                                <span class="badge badge-gen">Gen ${entity.generation}</span>
-                                ${entity.isMutant ? '<span class="badge badge-mutant">MUTANTE</span>' : ''}
-                            </div>
-                            <div class="nft-detail">
-                                <span class="badge badge-shape">${shapeNames[entity.shapeType]}</span>
-                            </div>
-                            <div class="nft-detail">
-                                <span> Cor:</span>
-                                <span style="color:${colorPalette[entity.colorIndex]};font-weight:bold;">${colorNames[entity.colorIndex]}</span>
-                            </div>
-                            ${entity.parent1 > 0 ? `<div class="nft-detail"><span>👨‍👩 Pais:</span><span>#${entity.parent1} + #${entity.parent2}</span></div>` : ''}
-                        </div>
-                    `;
-                    
-                    card.onclick = () => selectNFT(entity.id);
+                    const card = createNFTCard(entity);
                     grid.appendChild(card);
                 });
                 
@@ -979,17 +790,52 @@
                 document.getElementById('totalMutants').textContent = mutants;
                 
             } catch (e) {
-                console.error("Erro ao carregar:", e);
-                grid.innerHTML = '<div class="loading">Erro ao carregar NFTs</div>';
+                console.error("Erro ao carregar NFTs:", e);
+                grid.innerHTML = `<div class="loading" style="color:#ff6666">Erro: ${e.message}</div>`;
             }
         }
+
+        function createNFTCard(entity) {
+            const card = document.createElement('div');
+            card.className = 'nft-card' + (entity.isMutant ? ' mutant' : '');
+            card.dataset.tokenId = entity.id;
+            if (selectedNFTs.includes(entity.id)) card.classList.add('selected');
+            
+            const svg = generateShapeSVG(entity.shapeType, entity.colorIndex, entity.rotation, entity.size, entity.isMutant);
+            
+            card.innerHTML = `
+                <div class="card-actions">
+                    <button class="card-btn" onclick="event.stopPropagation(); openModal3D(${entity.shapeType}, ${entity.colorIndex}, ${entity.isMutant})">🎥 3D</button>
+                    <button class="card-btn" onclick="event.stopPropagation(); shareNFT(${entity.id})">🔗</button>
+                </div>
+                <div class="nft-image">${svg}</div>
+                <div class="nft-info">
+                    <div class="nft-name">NFT #${entity.id}</div>
+                    <div class="nft-detail">
+                        <span class="badge badge-gen">Gen ${entity.generation}</span>
+                        ${entity.isMutant ? '<span class="badge badge-mutant">MUTANTE</span>' : ''}
+                    </div>
+                    <div class="nft-detail">
+                        <span class="badge badge-shape">${shapeNames[entity.shapeType]}</span>
+                    </div>
+                    <div class="nft-detail">
+                        <span>🎨 Cor:</span>
+                        <span style="color:${colorPalette[entity.colorIndex]};font-weight:bold;">${colorNames[entity.colorIndex]}</span>
+                    </div>
+                    ${entity.parent1 > 0 ? `<div class="nft-detail"><span>👨‍👩 Pais:</span><span>#${entity.parent1} + #${entity.parent2}</span></div>` : ''}
+                </div>
+            `;
+            
+            card.onclick = () => selectNFT(entity.id);
+            return card;
+        }
+
 
         function generateShapeSVG(shapeType, colorIndex, rotation, size, isMutant) {
             const color = colorPalette[colorIndex] || '#FFFFFF';
             const cx = 140, cy = 140;
             const r = (size || 80) * 0.7;
             let shape = '';
-            
             switch(shapeType) {
                 case 0: shape = `<polygon points="${cx},${cy-r} ${cx+r},${cy+r} ${cx-r},${cy+r}" fill="${color}" opacity="0.8"/>`; break;
                 case 1: shape = `<rect x="${cx-r}" y="${cy-r}" width="${r*2}" height="${r*2}" fill="${color}" opacity="0.8"/>`; break;
@@ -1017,12 +863,10 @@
                 case 23: shape = generatePolygon(cx, cy, r, 12, color, 0.8) + generatePolygon(cx, cy, r*0.7, 12, color, 0.5); break;
                 case 24: shape = generatePolygon(cx, cy, r, 10, color, 0.8) + generatePolygon(cx, cy, r*0.6, 10, color, 0.5); break;
             }
-            
             if (isMutant) {
                 shape += `<circle cx="${cx}" cy="${cy}" r="${r*1.2}" fill="none" stroke="#FF00FF" stroke-width="3" opacity="0.8"/>`;
                 shape += `<circle cx="${cx}" cy="${cy}" r="${r*1.4}" fill="none" stroke="#FF00FF" stroke-width="2" opacity="0.4"/>`;
             }
-            
             return `<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
         }
 
@@ -1040,9 +884,8 @@
         // ===== SELEÇÃO E FUSÃO =====
         function selectNFT(tokenId) {
             const index = selectedNFTs.indexOf(tokenId);
-            if (index > -1) {
-                selectedNFTs.splice(index, 1);
-            } else {
+            if (index > -1) selectedNFTs.splice(index, 1);
+            else {
                 if (selectedNFTs.length >= 2) selectedNFTs.shift();
                 selectedNFTs.push(tokenId);
             }
@@ -1063,40 +906,31 @@
                 document.getElementById('previewParent1').textContent = `NFT #${selectedNFTs[0]}`;
                 document.getElementById('previewParent2').textContent = `NFT #${selectedNFTs[1]}`;
                 document.getElementById('previewChild').textContent = 'Filho (Gen ' + (getGeneration(selectedNFTs[0]) + 1) + ')';
-            } else {
-                preview.style.display = 'none';
-            }
+            } else preview.style.display = 'none';
         }
 
-        function getGeneration(tokenId) {
-            // Simplificado - na prática buscaria do contrato
-            return 1;
-        }
+        function getGeneration(tokenId) { return 1; }
 
         async function confirmFusion() {
             if (selectedNFTs.length !== 2) { showToast("Selecione 2 NFTs!", "error"); return; }
             const [token1, token2] = selectedNFTs;
-            
             try {
                 if (!window.ethereum) { showToast("MetaMask não detectada!", "error"); return; }
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const userContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-                
                 showToast(`🔥 Fundindo NFT #${token1} + #${token2}...`);
                 const tx = await userContract.fuseNFTs(token1, token2, { gasLimit: 500000 });
                 showToast("⏳ Transação enviada!");
                 await tx.wait();
-                showToast("✅ Fusão realizada com sucesso!", "success");
-                
+                showToast("✅ Fusão realizada!", "success");
+                transactionHistory.push({ type: 'fusion', token1, token2, txHash: tx.hash, timestamp: new Date() });
                 selectedNFTs = [];
                 updateCardSelection();
                 document.getElementById('fusionPreview').style.display = 'none';
                 await loadNFTs();
-            } catch (e) {
-                showToast("❌ Erro: " + e.message, "error");
-            }
+            } catch (e) { showToast("❌ Erro: " + e.message, "error"); }
         }
 
         // ===== 3D VIEWER =====
@@ -1107,7 +941,6 @@
             modal.classList.add('active');
             const container = document.getElementById('canvas-3d');
             container.innerHTML = '';
-            
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x000000, 0.02);
             camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -1120,13 +953,11 @@
             controls.enableDamping = true;
             controls.autoRotate = true;
             controls.autoRotateSpeed = 2.0;
-            
             const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
             scene.add(ambientLight);
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(5, 5, 5);
             scene.add(directionalLight);
-            
             create3DShape(shapeType, colorPalette[colorIndex] || '#FFFFFF', isMutant);
             animate3D();
         }
@@ -1187,27 +1018,14 @@
             mesh = null;
         }
 
-        // ===== COMPARTILHAR =====
         function shareNFT(tokenId) {
             const url = `${window.location.origin}?nft=${tokenId}`;
-            navigator.clipboard.writeText(url).then(() => {
-                showToast(`🔗 Link copiado: NFT #${tokenId}`, "success");
-            });
+            navigator.clipboard.writeText(url).then(() => showToast(`🔗 Link copiado: NFT #${tokenId}`, "success"));
         }
 
-        // ===== EXPORTAR DADOS =====
         function exportData() {
-            const data = {
-                contract: CONTRACT_ADDRESS,
-                exportDate: new Date().toISOString(),
-                nfts: []
-            };
-            
-            document.querySelectorAll('.nft-card').forEach(card => {
-                const id = parseInt(card.dataset.tokenId);
-                data.nfts.push({ id });
-            });
-            
+            const data = { contract: CONTRACT_ADDRESS, exportDate: new Date().toISOString(), nfts: [] };
+            document.querySelectorAll('.nft-card').forEach(card => data.nfts.push({ id: parseInt(card.dataset.tokenId) }));
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1217,7 +1035,6 @@
             showToast("💾 Dados exportados!", "success");
         }
 
-        // ===== ESTATÍSTICAS =====
         function loadStats() {
             const ctx = document.getElementById('statsChart').getContext('2d');
             new Chart(ctx, {
@@ -1234,38 +1051,379 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: { labels: { color: 'white' } }
-                    },
-                    scales: {
-                        x: { ticks: { color: 'white' } },
-                        y: { ticks: { color: 'white' } }
-                    }
+                    plugins: { legend: { labels: { color: 'white' } } },
+                    scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } }
                 }
             });
         }
 
         // ===== ÁRVORE GENEALÓGICA =====
-        function loadTree() {
+        
+        
+        
+        async function loadTree() {
             const container = document.getElementById('treeVisualization');
-            container.innerHTML = '<div class="loading">Carregando árvore...</div>';
-            // Implementação simplificada
-            container.innerHTML = '<div style="text-align:center;padding:50px;"> Visualização de árvore em desenvolvimento</div>';
+            container.innerHTML = '<div class="loading"><div class="spinner"></div>Carregando árvore...</div>';
+            
+            try {
+                // Verificar se contract existe
+                if (!contract) {
+                    container.innerHTML = '<div class="loading" style="color:#ff6666">Contrato não inicializado. Recarregue a página.</div>';
+                    return;
+                }
+                
+                const nextId = await contract.nextTokenId();
+                const total = Number(nextId) - 1;
+                
+                if (total === 0) {
+                    container.innerHTML = '<div class="loading">Nenhum NFT criado ainda.</div>';
+                    return;
+                }
+                
+                const entities = [];
+                for (let i = 1; i < nextId; i++) {
+                    try {
+                        const dna = await contract.entityDNA(i);
+                        const seed = dna[0];
+                        entities.push({
+                            id: i,
+                            generation: Number(dna[1]),
+                            parent1: Number(dna[2]),
+                            parent2: Number(dna[3]),
+                            isMutant: dna[4],
+                            shapeType: getShapeTypeFromSeed(seed),
+                            colorIndex: getColorIndexFromSeed(seed)
+                        });
+                    } catch (e) {
+                        console.error(`Erro NFT #${i}:`, e);
+                    }
+                }
+                
+                if (entities.length === 0) {
+                    container.innerHTML = '<div class="loading">Nenhum NFT encontrado.</div>';
+                    return;
+                }
+                
+                renderTree(entities);
+                
+            } catch (e) {
+                console.error("Erro:", e);
+                container.innerHTML = `<div class="loading" style="color:#ff6666">Erro: ${e.message}</div>`;
+            }
+        }
+
+
+        function getNodeIcon(shapeType)
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-weight:bold;font-size:1.2em;margin-bottom:8px;">NFT #${entity.id}</div>
+                    <div style="font-size:0.9em;opacity:0.8;margin-bottom:5px;">${shape}</div>
+                    <div style="font-size:0.85em;opacity:0.6;margin-top:5px;">
+                        Gen ${entity.generation}
+                        ${entity.isMutant ? '<span style="color:var(--primary);font-weight:bold;"> 🧬 MUTANTE</span>' : ''}
+                    </div>
+                    ${entity.parent1 > 0 ? `<div style="font-size:0.8em;opacity:0.7;margin-top:10px;">👨‍👩 Pais: #${entity.parent1} + #${entity.parent2}</div>` : ''}
+                </div>
+            `;
+            
+            return node;
+        }
+
+        function getNodeIcon(shapeType) {
+            const icons = ['🔺', '', '▭', '', '💎', '', '▱', '', '', '⬢', '', '', '', '⬭', '📦', '🔮', '', '🔺', '', '🔺', '', '🔷', '⯁', '', ''];
+            return icons[shapeType] || '🔷';
+        }
+
+
+        function renderTree(entities) {
+            const container = document.getElementById('treeVisualization');
+            container.innerHTML = '';
+            const byGeneration = {};
+            entities.forEach(e => {
+                if (!byGeneration[e.generation]) byGeneration[e.generation] = [];
+                byGeneration[e.generation].push(e);
+            });
+            const maxGen = Math.max(...Object.keys(byGeneration).map(Number));
+            const treeContainer = document.createElement('div');
+            treeContainer.className = 'tree-container';
+            for (let gen = 1; gen <= maxGen; gen++) {
+                if (!byGeneration[gen]) continue;
+                const genSection = document.createElement('div');
+                genSection.className = 'tree-generation';
+                const title = document.createElement('div');
+                title.className = 'tree-gen-title';
+                title.textContent = `🧬 Geração ${gen} (${byGeneration[gen].length} NFTs)`;
+                genSection.appendChild(title);
+                const row = document.createElement('div');
+                row.className = 'tree-row';
+                byGeneration[gen].forEach(entity => {
+                    const node = createTreeNode(entity);
+                    row.appendChild(node);
+                });
+                genSection.appendChild(row);
+                treeContainer.appendChild(genSection);
+            }
+            container.appendChild(treeContainer);
+        }
+
+        function createTreeNode(entity) {
+            const node = document.createElement('div');
+            node.className = 'tree-node' + (entity.isMutant ? ' mutant' : '');
+            const color = colorPalette[entity.colorIndex];
+            const shape = shapeNames[entity.shapeType];
+            node.innerHTML = `
+                <div class="tree-node-icon" style="background:${color}">${getNodeIcon(entity.shapeType)}</div>
+                <div class="tree-node-id">NFT #${entity.id}</div>
+                <div class="tree-node-info">${shape}</div>
+                <div style="font-size:0.8em;opacity:0.6;margin-top:5px;">Gen ${entity.generation}${entity.isMutant ? '<span style="color:var(--primary);font-weight:bold;"> 🧬 MUTANTE</span>' : ''}</div>
+                ${entity.parent1 > 0 ? `<div class="tree-node-parents">👨‍ Pais: #${entity.parent1} + #${entity.parent2}</div>` : ''}
+            `;
+            return node;
+        }
+
+        function getNodeIcon(shapeType) {
+            const icons = ['🔺', '', '▭', '', '💎', '', '▱', '', '', '⬢', '', '', '', '⬭', '📦', '🔮', '', '🔺', '🔼', '🔺', '', '🔷', '⯁', '', ''];
+            return icons[shapeType] || '🔷';
         }
 
         // ===== HISTÓRICO =====
-        function loadHistory() {
+        
+        
+        
+        async function loadHistory() {
             const container = document.getElementById('transactionHistory');
-            container.innerHTML = '<div style="text-align:center;padding:50px;">📝 Histórico de transações em desenvolvimento</div>';
+            container.innerHTML = '<div class="loading"><div class="spinner"></div>Carregando histórico...</div>';
+            
+            try {
+                if (!contract) {
+                    container.innerHTML = '<div class="loading" style="color:#ff6666">Contrato não inicializado.</div>';
+                    return;
+                }
+                
+                const nextId = await contract.nextTokenId();
+                const total = Number(nextId) - 1;
+                
+                if (total === 0) {
+                    container.innerHTML = '<div class="loading">Nenhuma transação encontrada.</div>';
+                    return;
+                }
+                
+                const history = [];
+                
+                for (let i = 1; i < nextId; i++) {
+                    try {
+                        const dna = await contract.entityDNA(i);
+                        const isMutant = dna[4];
+                        
+                        if (dna[2] === 0n && dna[3] === 0n) {
+                            history.push({
+                                type: 'mint',
+                                tokenId: i,
+                                isMutant: isMutant,
+                                blockNumber: Number(dna[1])
+                            });
+                        } else {
+                            history.push({
+                                type: 'fusion',
+                                token1: Number(dna[2]),
+                                token2: Number(dna[3]),
+                                newTokenId: i,
+                                isMutant: isMutant,
+                                blockNumber: Number(dna[1])
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Erro NFT #${i}:`, e);
+                    }
+                }
+                
+                if (history.length === 0) {
+                    container.innerHTML = '<div class="loading">Nenhuma transação encontrada.</div>';
+                    return;
+                }
+                
+                history.sort((a, b) => b.blockNumber - a.blockNumber);
+                renderHistory(history);
+                
+            } catch (e) {
+                console.error("Erro:", e);
+                container.innerHTML = `<div class="loading" style="color:#ff6666">Erro: ${e.message}</div>`;
+            }
         }
 
-        // ===== INICIALIZAÇÃO =====
-        async function init() {
-            provider = new ethers.JsonRpcProvider(RPC_URL, { chainId: CHAIN_ID, name: "LitVM" }, { staticNetwork: ethers.Network.from(CHAIN_ID) });
-            contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-            await loadNFTs();
-            showToast("✅ Sistema carregado com sucesso!", "success");
+
+        function renderHistory(history) {
+            const container = document.getElementById('transactionHistory');
+            container.innerHTML = '';
+            
+            const historyList = document.createElement('div');
+            historyList.className = 'history-list';
+            historyList.style.cssText = 'max-height:600px;overflow-y:auto;';
+            
+            history.forEach((tx, index) => {
+                const item = document.createElement('div');
+                item.className = 'history-item' + (tx.type === 'mint' ? ' history-mint' : ' history-fusion');
+                item.style.cssText = `
+                    background:var(--glass-bg);
+                    border:1px solid var(--glass-border);
+                    border-radius:15px;
+                    padding:20px;
+                    margin-bottom:15px;
+                    display:flex;
+                    align-items:center;
+                    gap:20px;
+                    transition:all 0.3s;
+                    border-left:4px solid ${tx.type === 'mint' ? '#00ff00' : '#ff00ff'};
+                    animation: fadeIn 0.5s ease ${index * 0.1}s;
+                `;
+                
+                item.onmouseover = () => {
+                    item.style.transform = 'translateX(10px)';
+                    item.style.boxShadow = '0 5px 20px rgba(0, 255, 255, 0.2)';
+                };
+                item.onmouseout = () => {
+                    item.style.transform = 'translateX(0)';
+                    item.style.boxShadow = 'none';
+                };
+                
+                const icon = tx.type === 'mint' ? '🎨' : '🔥';
+                const title = tx.type === 'mint' 
+                    ? `Mint NFT #${tx.tokenId} ${tx.isMutant ? '🧬 MUTANTE' : ''}` 
+                    : `Fusão NFT #${tx.token1} + #${tx.token2} → #${tx.newTokenId} ${tx.isMutant ? '🧬 MUTANTE' : ''}`;
+                const details = tx.type === 'mint' 
+                    ? 'NFT criado com sucesso' 
+                    : `Novo NFT filho criado (Geração ${tx.isMutant ? 'MUTANTE' : 'normal'})`;
+                
+                item.innerHTML = `
+                    <div class="history-icon" style="
+                        font-size:2.5em;
+                        width:60px;
+                        height:60px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        border-radius:50%;
+                        background:${tx.type === 'mint' ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,255,0.1)'};
+                    ">${icon}</div>
+                    <div class="history-content" style="flex:1;">
+                        <div class="history-title" style="font-size:1.2em;font-weight:bold;margin-bottom:5px;">${title}</div>
+                        <div class="history-details" style="opacity:0.8;font-size:0.9em;">${details}</div>
+                        <div class="history-time" style="opacity:0.6;font-size:0.85em;margin-top:5px;">📦 Bloco #${tx.blockNumber}</div>
+                    </div>
+                `;
+                historyList.appendChild(item);
+            });
+            
+            container.appendChild(historyList);
         }
+
+
+        function renderHistory(history) {
+            const container = document.getElementById('transactionHistory');
+            container.innerHTML = '';
+            
+            if (history.length === 0) {
+                container.innerHTML = '<div class="loading">Nenhuma transação encontrada.</div>';
+                return;
+            }
+            
+            const historyList = document.createElement('div');
+            historyList.className = 'history-list';
+            historyList.style.cssText = 'max-height:600px;overflow-y:auto;';
+            
+            history.forEach(tx => {
+                const item = document.createElement('div');
+                item.className = 'history-item' + (tx.type === 'mint' ? ' history-mint' : ' history-fusion');
+                item.style.cssText = `
+                    background:var(--glass-bg);
+                    border:1px solid var(--glass-border);
+                    border-radius:15px;
+                    padding:20px;
+                    margin-bottom:15px;
+                    display:flex;
+                    align-items:center;
+                    gap:20px;
+                    transition:all 0.3s;
+                    border-left:4px solid ${tx.type === 'mint' ? '#00ff00' : 'var(--primary)'};
+                `;
+                
+                item.onmouseover = () => {
+                    item.style.transform = 'translateX(10px)';
+                    item.style.boxShadow = '0 5px 20px rgba(0, 255, 255, 0.2)';
+                };
+                item.onmouseout = () => {
+                    item.style.transform = 'translateX(0)';
+                    item.style.boxShadow = 'none';
+                };
+                
+                const icon = tx.type === 'mint' ? '🎨' : '🔥';
+                const title = tx.type === 'mint' 
+                    ? `Mint NFT #${tx.tokenId}` 
+                    : `Fusão NFT #${tx.token1} + #${tx.token2} → #${tx.newTokenId} ${tx.isMutant ? '🧬 MUTANTE' : ''}`;
+                const details = tx.type === 'mint' 
+                    ? 'NFT criado com sucesso' 
+                    : `Novo NFT filho criado (Geração ${tx.isMutant ? 'MUTANTE' : 'normal'})`;
+                const time = tx.timestamp.toLocaleString('pt-BR');
+                
+                item.innerHTML = `
+                    <div class="history-icon" style="
+                        font-size:2.5em;
+                        width:60px;
+                        height:60px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        border-radius:50%;
+                        background:${tx.type === 'mint' ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,255,0.1)'};
+                    ">${icon}</div>
+                    <div class="history-content" style="flex:1;">
+                        <div class="history-title" style="font-size:1.2em;font-weight:bold;margin-bottom:5px;">${title}</div>
+                        <div class="history-details" style="opacity:0.8;font-size:0.9em;">${details}</div>
+                        <div class="history-time" style="opacity:0.6;font-size:0.85em;margin-top:5px;">🕐 ${time}</div>
+                        <div style="opacity:0.5;font-size:0.75em;margin-top:5px;">🔗 ${tx.txHash.substring(0, 20)}...${tx.txHash.substring(-10)}</div>
+                    </div>
+                `;
+                historyList.appendChild(item);
+            });
+            
+            container.appendChild(historyList);
+        }
+
+
+        // ===== INICIALIZAÇÃO =====
+        
+        // ===== INICIALIZAÇÃO - SEM ENS =====
+        
+        // ===== INICIALIZAÇÃO - SEM ENS =====
+        async function init() {
+            try {
+                // Criar provider SEM ENS de forma alguma
+                const network = {
+                    chainId: CHAIN_ID,
+                    name: "LitVM"
+                };
+                
+                // Provider estático sem resolução de nomes
+                provider = new ethers.JsonRpcProvider(RPC_URL, network, {
+                    staticNetwork: true,
+                    polling: false
+                });
+                
+                // Criar contrato diretamente - SEM chamar getAddress()
+                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+                
+                // Forçar conexão
+                await provider.getNetwork();
+                
+                await loadNFTs();
+                showToast("✅ Sistema carregado!", "success");
+            } catch (e) {
+                console.error("Erro na inicialização:", e);
+                showToast("❌ Erro: " + e.message, "error");
+            }
+        }
+
 
         window.onload = init;
     </script>
