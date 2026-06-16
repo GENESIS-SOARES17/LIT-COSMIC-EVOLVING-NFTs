@@ -1,1 +1,75 @@
 https://chat.qwen.ai/c/4aaea8fc-c8bb-4b1c-98fd-6bb4699ff2c8
+https://chat.qwen.ai/c/4aaea8fc-c8bb-4b1c-98fd-6bb4699ff2c8
+
+
+
+
+
+python3 -m http.server 8080
+
+
+http://localhost:8080
+
+
+
+# Entrar na pasta do projeto
+cd /media/genesis/BACKUP/PROJETOS-PRONTOS-RODANDO/NFTS-ALEATORIOS-LITVM
+
+# Verificar se está na pasta correta
+ls -la
+
+# Verificar dependências
+npm list
+
+# Instalar/atualizar dependências (se necessário)
+npm install
+
+
+Mint Único 
+
+npx hardhat run scripts/mint.js --network liteforge
+
+
+
+Mint em Massa 
+# Mintar 5 NFTs com intervalo de 3 segundos
+COUNT=5 INTERVAL=3000 npx hardhat run scripts/batch_mint.js --network liteforge
+
+# Mintar 10 NFTs com intervalo de 5 segundos
+COUNT=10 INTERVAL=5000 npx hardhat run scripts/batch_mint.js --network liteforge
+
+# Mintar 20 NFTs rapidamente (1 segundo entre cada)
+COUNT=20 INTERVAL=1000 npx hardhat run scripts/batch_mint.js --network liteforge
+
+
+Exportar Imagens SVG
+# Exportar todos os NFTs
+node scripts/export_svg.js all
+
+# Exportar NFT específico
+node scripts/export_svg.js 5
+
+# Exportar intervalo
+node scripts/export_svg.js 1 10
+
+Converter para PNG
+python3 scripts/convert_to_png.py
+
+
+# 1. Mint único
+npx hardhat run scripts/mint.js --network liteforge
+
+# 2. Mint em massa (10 NFTs)
+COUNT=10 INTERVAL=3000 npx hardhat run scripts/batch_mint.js --network liteforge
+
+# 3. Fusão
+TOKEN1=1 TOKEN2=2 npx hardhat run scripts/fuse.js --network liteforge
+
+# 4. Iniciar frontend
+python3 -m http.server 8080
+
+# 5. Exportar imagens
+node scripts/export_svg.js all && xdg-open nft-images/
+
+
+
