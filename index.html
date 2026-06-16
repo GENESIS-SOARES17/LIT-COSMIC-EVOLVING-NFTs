@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Evolving NFTs</title>
+    <title>Cosmic Evolving NFTs - Árvore Genealógica</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,7 +14,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
         h1 {
             text-align: center;
             font-size: 2.5em;
@@ -24,14 +24,6 @@
             -webkit-text-fill-color: transparent;
         }
         .subtitle { text-align: center; opacity: 0.7; margin-bottom: 30px; }
-        
-        .wallet-status { 
-            text-align: center; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            border-radius: 10px;
-        }
-        .connected { background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; color: #00ff00; }
         
         .stats {
             display: grid;
@@ -67,9 +59,10 @@
             transition: transform 0.2s;
         }
         .btn:hover { transform: scale(1.05); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .fusion-panel {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 0, 255, 0.1);
             border: 2px solid #ff00ff;
             border-radius: 15px;
             padding: 25px;
@@ -83,35 +76,29 @@
             margin-bottom: 20px;
             color: #ff00ff;
         }
-        .fusion-inputs {
+        .selected-nfts {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin: 20px 0;
             flex-wrap: wrap;
         }
-        .fusion-inputs input {
-            padding: 12px 20px;
-            border-radius: 10px;
-            border: 2px solid #00ffff;
+        .selected-nft {
             background: rgba(0, 255, 255, 0.1);
-            color: white;
-            font-size: 1.1em;
-            width: 120px;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
             text-align: center;
         }
-        .fusion-inputs input:focus {
-            outline: none;
-            border-color: #ff00ff;
-        }
-        .fusion-inputs span {
-            font-size: 2em;
-            color: #ff00ff;
+        .selected-nft.empty {
+            border-style: dashed;
+            opacity: 0.5;
         }
         .fusion-btn {
             display: block;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 15px 40px;
             background: linear-gradient(90deg, #ff0000, #ff6600);
             border: none;
@@ -122,6 +109,7 @@
             transition: transform 0.2s;
         }
         .fusion-btn:hover { transform: scale(1.05); }
+        .fusion-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .nft-grid {
             display: grid;
@@ -134,25 +122,45 @@
             border-radius: 15px;
             overflow: hidden;
             transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
         }
         .nft-card:hover {
             transform: translateY(-5px);
             border-color: #00ffff;
             box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
         }
+        .nft-card.selected {
+            border-color: #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+            transform: scale(1.02);
+        }
+        .nft-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff00ff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
         .nft-card.mutant {
             border-color: #ff00ff;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         }
         .nft-image {
             width: 100%;
             height: 250px;
-            object-fit: contain;
-            background: #000;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 4em;
         }
         .nft-info { padding: 15px; }
         .nft-name {
@@ -180,16 +188,13 @@
         .badge-mutant { background: #ff00ff; color: white; }
         
         .loading { text-align: center; padding: 50px; font-size: 1.5em; }
-        .error { color: #ff4444; text-align: center; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 10px; margin: 20px 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌌 COSMIC EVOLVING NFTs</h1>
-        <p class="subtitle">Mint, Fuse & Watch Evolution</p>
+        <h1>🌳 ÁRVORE GENEALÓGICA CÓSMICA</h1>
+        <p class="subtitle">Selecione 2 NFTs para fundir e criar um novo</p>
         
-        <div class="wallet-status connected" id="walletStatus"> Conectado</div>
-
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-value" id="totalEntities">-</div>
@@ -207,20 +212,28 @@
         
         <div class="actions">
             <button class="btn" onclick="mintNFT()">🎨 MINT NOVO NFT</button>
-            <button class="btn" onclick="toggleFusion()">🔥 FUNDIR NFTs</button>
+            <button class="btn" onclick="toggleFusionMode()">🔥 MODO FUSÃO</button>
             <button class="btn" onclick="loadNFTs()">🔄 ATUALIZAR</button>
         </div>
         
         <div class="fusion-panel" id="fusionPanel">
-            <div class="fusion-title"> Fundir dois NFTs para criar um novo</div>
-            <div class="fusion-inputs">
-                <input type="number" id="token1" placeholder="ID 1" min="1">
-                <span>+</span>
-                <input type="number" id="token2" placeholder="ID 2" min="1">
+            <div class="fusion-title">🔥 Selecione 2 NFTs para fundir</div>
+            <div class="selected-nfts">
+                <div class="selected-nft empty" id="selected1">
+                    <div style="font-size: 2em;">?</div>
+                    <div>NFT 1</div>
+                </div>
+                <div style="font-size: 2em;">+</div>
+                <div class="selected-nft empty" id="selected2">
+                    <div style="font-size: 2em;">?</div>
+                    <div>NFT 2</div>
+                </div>
             </div>
-            <button class="fusion-btn" onclick="fuseNFTs()">🔥 FUNDIR AGORA</button>
-            <p style="text-align:center;margin-top:15px;opacity:0.7;font-size:0.9em;">
-                ️ Os NFTs pais serão QUEIMADOS permanentemente!
+            <button class="fusion-btn" id="fuseBtn" onclick="fuseNFTs()" disabled>
+                🔥 FUNDIR NFTs SELECIONADOS
+            </button>
+            <p style="text-align:center;margin-top:15px;opacity:0.7;">
+                💡 Clique nos cards abaixo para selecionar os NFTs
             </p>
         </div>
         
@@ -230,7 +243,7 @@
     </div>
 
     <script>
-        const CONTRACT_ADDRESS = "0x578c1650AB432801839D385A54EAae4f4d7a7A7C";
+        const CONTRACT_ADDRESS = "0x19A88C98996c9b9E772028408250F23F1400F7";
         const RPC_URL = "https://liteforge.rpc.caldera.xyz/http";
         const CHAIN_ID = 4441;
         
@@ -244,39 +257,83 @@
         ];
         
         let contract, provider;
+        let fusionMode = false;
+        let selectedNFTs = [];
         
         async function init() {
-            try {
-                provider = new ethers.JsonRpcProvider(RPC_URL, { chainId: CHAIN_ID, name: "LitVM" }, { staticNetwork: ethers.Network.from(CHAIN_ID) });
-                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-                await loadNFTs();
-            } catch (e) {
-                console.error("Erro na inicialização:", e);
+            provider = new ethers.JsonRpcProvider(RPC_URL, { chainId: CHAIN_ID, name: "LitVM" }, { staticNetwork: ethers.Network.from(CHAIN_ID) });
+            contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+            await loadNFTs();
+        }
+        
+        function toggleFusionMode() {
+            fusionMode = !fusionMode;
+            const panel = document.getElementById('fusionPanel');
+            panel.classList.toggle('active', fusionMode);
+            
+            if (!fusionMode) {
+                selectedNFTs = [];
+                updateSelectedDisplay();
             }
         }
         
-        function toggleFusion() {
-            const panel = document.getElementById('fusionPanel');
-            panel.classList.toggle('active');
+        function selectNFT(tokenId) {
+            if (!fusionMode) return;
+            
+            const index = selectedNFTs.indexOf(tokenId);
+            if (index > -1) {
+                selectedNFTs.splice(index, 1);
+            } else {
+                if (selectedNFTs.length >= 2) {
+                    selectedNFTs.shift();
+                }
+                selectedNFTs.push(tokenId);
+            }
+            
+            updateSelectedDisplay();
+            updateCardSelection();
+        }
+        
+        function updateSelectedDisplay() {
+            const sel1 = document.getElementById('selected1');
+            const sel2 = document.getElementById('selected2');
+            const fuseBtn = document.getElementById('fuseBtn');
+            
+            if (selectedNFTs.length >= 1) {
+                sel1.innerHTML = `<div style="font-size: 1.5em;">✨</div><div>NFT #${selectedNFTs[0]}</div>`;
+                sel1.classList.remove('empty');
+            } else {
+                sel1.innerHTML = `<div style="font-size: 2em;">?</div><div>NFT 1</div>`;
+                sel1.classList.add('empty');
+            }
+            
+            if (selectedNFTs.length >= 2) {
+                sel2.innerHTML = `<div style="font-size: 1.5em;">✨</div><div>NFT #${selectedNFTs[1]}</div>`;
+                sel2.classList.remove('empty');
+                fuseBtn.disabled = false;
+            } else {
+                sel2.innerHTML = `<div style="font-size: 2em;">?</div><div>NFT 2</div>`;
+                sel2.classList.add('empty');
+                fuseBtn.disabled = true;
+            }
+        }
+        
+        function updateCardSelection() {
+            document.querySelectorAll('.nft-card').forEach(card => {
+                const tokenId = parseInt(card.dataset.tokenId);
+                card.classList.toggle('selected', selectedNFTs.includes(tokenId));
+            });
         }
         
         async function fuseNFTs() {
-            const token1 = parseInt(document.getElementById('token1').value);
-            const token2 = parseInt(document.getElementById('token2').value);
-            
-            if (!token1 || !token2) {
-                alert("⚠️ Digite os IDs dos dois NFTs!");
+            if (selectedNFTs.length !== 2) {
+                alert("⚠️ Selecione exatamente 2 NFTs!");
                 return;
             }
             
-            if (token1 === token2) {
-                alert("⚠️ Os NFTs devem ser diferentes!");
-                return;
-            }
+            const [token1, token2] = selectedNFTs;
             
-            if (!confirm(`🔥 Tem certeza que deseja fundir NFT #${token1} + NFT #${token2}?
-
-Os pais serão QUEIMADOS permanentemente!`)) {
+            if (!confirm(`🔥 Fundir NFT #${token1} + NFT #${token2}?\n\nUm novo NFT filho será criado!`)) {
                 return;
             }
             
@@ -287,27 +344,23 @@ Os pais serão QUEIMADOS permanentemente!`)) {
                 }
                 
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
-                
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const userContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
                 
                 alert(`🔥 Fundindo NFT #${token1} + NFT #${token2}...`);
-                const tx = await userContract.fuseNFTs(token1, token2, { gasLimit: 2000000 });
-                alert(" Transação enviada! Hash: " + tx.hash.substring(0, 30) + "...");
+                const tx = await userContract.fuseNFTs(token1, token2, { gasLimit: 500000 });
+                alert("⏳ Transação enviada!");
                 
                 await tx.wait();
-                alert("✅ Fusão realizada! Novo NFT criado. Pais queimados.");
+                alert("✅ Fusão realizada! Novo NFT criado.");
                 
-                document.getElementById('fusionPanel').classList.remove('active');
-                document.getElementById('token1').value = '';
-                document.getElementById('token2').value = '';
-                
+                selectedNFTs = [];
+                updateSelectedDisplay();
                 await loadNFTs();
                 
             } catch (e) {
-                console.error("Erro na fusão:", e);
-                alert("❌ Erro na fusão: " + e.message);
+                alert("❌ Erro: " + e.message);
             }
         }
         
@@ -345,11 +398,15 @@ Os pais serão QUEIMADOS permanentemente!`)) {
                         
                         const card = document.createElement('div');
                         card.className = 'nft-card';
+                        card.dataset.tokenId = i;
                         if (isMutant) card.classList.add('mutant');
+                        if (selectedNFTs.includes(i)) card.classList.add('selected');
+                        
+                        card.onclick = () => selectNFT(i);
                         
                         card.innerHTML = `
                             <div class="nft-image" style="background: linear-gradient(135deg, rgb(${r},${g},${b}) 0%, rgb(${(r+50)%256},${(g+50)%256},${(b+50)%256}) 100%);">
-                                <div style="font-size: 4em;">${isMutant ? '🧬' : '✨'}</div>
+                                ${isMutant ? '🧬' : '✨'}
                             </div>
                             <div class="nft-info">
                                 <div class="nft-name">NFT #${i}</div>
@@ -363,7 +420,7 @@ Os pais serão QUEIMADOS permanentemente!`)) {
                                 </div>
                                 ${Number(dna[2]) > 0 ? `
                                 <div class="nft-detail">
-                                    <span>‍👩‍ Pais:</span>
+                                    <span>👨‍👩‍ Pais:</span>
                                     <span>#${Number(dna[2])} + #${Number(dna[3])}</span>
                                 </div>
                                 ` : ''}
@@ -380,8 +437,7 @@ Os pais serão QUEIMADOS permanentemente!`)) {
                 document.getElementById('totalEntities').textContent = total;
                 
             } catch (e) {
-                console.error("Erro ao carregar:", e);
-                grid.innerHTML = '<div class="error">Erro ao carregar NFTs: ' + e.message + '</div>';
+                grid.innerHTML = '<div class="loading">Erro ao carregar NFTs</div>';
             }
         }
         
@@ -393,23 +449,21 @@ Os pais serão QUEIMADOS permanentemente!`)) {
             
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
-                
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const userContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
                 
                 alert("🎨 Enviando transação de mint...");
                 const tx = await userContract.mintEntity({ gasLimit: 500000 });
-                alert("⏳ Transação enviada! Hash: " + tx.hash.substring(0, 30) + "...");
+                alert("⏳ Transação enviada!");
                 
                 await tx.wait();
-                alert("✅ NFT criado com sucesso!");
+                alert("✅ NFT criado!");
                 
                 await loadNFTs();
                 
             } catch (e) {
-                console.error("Erro no mint:", e);
-                alert(" Erro: " + e.message);
+                alert("❌ Erro: " + e.message);
             }
         }
         
