@@ -1,0 +1,14 @@
+node_modules/
+package-lock.json
+cache/
+artifacts/
+typechain-types/
+.env
+.env.local
+nft-images/png/
+*.png
+*.log
+bot.log
+.DS_Store
+.vscode/
+.idea/

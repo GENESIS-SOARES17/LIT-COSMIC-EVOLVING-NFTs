@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árvore Genealógica Cósmica</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a2e 0%, #000000 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; opacity: 0.7; margin-bottom: 30px; }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-value { font-size: 2em; font-weight: bold; color: #00ffff; }
+        .stat-label { opacity: 0.7; margin-top: 5px; }
+        
+        .family-tree {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .generation {
+            margin-bottom: 40px;
+        }
+        .generation-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00ffff;
+            border-bottom: 2px solid #00ffff;
+            padding-bottom: 10px;
+        }
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .nft-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .nft-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+        .nft-card.mutant {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        .nft-card.burned {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+        .nft-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background: #000;
+        }
+        .nft-info { padding: 15px; }
+        .nft-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nft-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 2px;
+        }
+        .badge-gen { background: #00ffff; color: black; }
+        .badge-mutant { background: #ff00ff; color: white; }
+        .badge-burned { background: #666; color: white; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+        }
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .loading { text-align: center; padding: 50px; font-size: 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 ÁRVORE GENEALÓGICA CÓSMICA</h1>
+        <p class="subtitle">Veja a evolução das entidades através das gerações</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalEntities">-</div>
+                <div class="stat-label">Entidades Vivas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalFusions">-</div>
+                <div class="stat-label">Total de Fusões</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="maxGeneration">-</div>
+                <div class="stat-label">Geração Máxima</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalMutants">-</div>
+                <div class="stat-label">Mutantes</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="loadTree()">🔄 Atualizar Árvore</button>
+            <button class="btn" onclick="exportTree()">📥 Exportar Árvore</button>
+        </div>
+        
+        <div id="familyTree" class="family-tree">
+            <div class="loading">Carregando árvore genealógica...</div>
+        </div>
+    </div>
+    
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <img id="modalImage" class="modal-image" src="" alt="">
+        </div>
+    </div>
+
+    <script>
+        const CONTRACT_ADDRESS = "0x578c1650AB432801839D385A54EAae4f4d7a7A7C";
+        const RPC_URL = "https://liteforge.rpc.caldera.xyz/http";
+        
+        const ABI = [
+            "function nextTokenId() external view returns (uint256)",
+            "function totalFusions() external view returns (uint256)",
+            "function getEntityInfo(uint256) external view returns (uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,uint256)",
+            "function tokenURI(uint256) external view returns (string)",
+            "function ownerOf(uint256) external view returns (address)"
+        ];
+        
+        let contract;
+        let allEntities = [];
+        
+        function decodeBase64(str) {
+            const binaryString = atob(str);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+        
+        async function init() {
+            const provider = new ethers.JsonRpcProvider(RPC_URL, { chainId: 4441, name: "LitVM" }, { staticNetwork: ethers.Network.from(4441) });
+            contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+            await loadTree();
+        }
+        
+        async function loadTree() {
+            const tree = document.getElementById('familyTree');
+            tree.innerHTML = '<div class="loading">Carregando árvore genealógica...</div>';
+            
+            try {
+                const nextId = await contract.nextTokenId();
+                const total = Number(nextId) - 1;
+                const fusions = await contract.totalFusions();
+                
+                allEntities = [];
+                let maxGen = 0;
+                let mutants = 0;
+                let alive = 0;
+                
+                // Carregar todas as entidades (incluindo queimadas)
+                for (let i = 1; i < nextId; i++) {
+                    try {
+                        const info = await contract.getEntityInfo(i);
+                        const tokenURI = await contract.tokenURI(i);
+                        const base64Data = tokenURI.split(',')[1];
+                        const jsonStr = decodeBase64(base64Data);
+                        const metadata = JSON.parse(jsonStr);
+                        
+                        const entity = {
+                            id: i,
+                            seed: info[0].toString(),
+                            generation: Number(info[1]),
+                            parent1: Number(info[2]),
+                            parent2: Number(info[3]),
+                            isMutant: info[4],
+                            colorR: Number(info[5]),
+                            colorG: Number(info[6]),
+                            colorB: Number(info[7]),
+                            shapeType: Number(info[8]),
+                            image: metadata.image,
+                            name: metadata.name,
+                            burned: false
+                        };
+                        
+                        allEntities.push(entity);
+                        if (entity.generation > maxGen) maxGen = entity.generation;
+                        if (entity.isMutant) mutants++;
+                        alive++;
+                    } catch (e) {
+                        // NFT foi queimado
+                        allEntities.push({
+                            id: i,
+                            burned: true,
+                            generation: 0,
+                            parent1: 0,
+                            parent2: 0,
+                            isMutant: false
+                        });
+                    }
+                }
+                
+                // Atualizar stats
+                document.getElementById('totalEntities').textContent = alive;
+                document.getElementById('totalFusions').textContent = fusions.toString();
+                document.getElementById('maxGeneration').textContent = maxGen;
+                document.getElementById('totalMutants').textContent = mutants;
+                
+                // Renderizar árvore por geração
+                renderTree();
+                
+            } catch (e) {
+                tree.innerHTML = '<div class="loading">Erro ao carregar: ' + e.message + '</div>';
+            }
+        }
+        
+        function renderTree() {
+            const tree = document.getElementById('familyTree');
+            tree.innerHTML = '';
+            
+            // Agrupar por geração
+            const generations = {};
+            allEntities.forEach(entity => {
+                const gen = entity.burned ? 0 : entity.generation;
+                if (!generations[gen]) generations[gen] = [];
+                generations[gen].push(entity);
+            });
+            
+            // Renderizar cada geração
+            const sortedGens = Object.keys(generations).sort((a, b) => a - b);
+            
+            sortedGens.forEach(gen => {
+                const genDiv = document.createElement('div');
+                genDiv.className = 'generation';
+                
+                const title = document.createElement('h2');
+                title.className = 'generation-title';
+                title.textContent = gen == 0 ? '🔥 Entidades Queimadas (Fundidas)' : `🧬 Geração ${gen}`;
+                genDiv.appendChild(title);
+                
+                const grid = document.createElement('div');
+                grid.className = 'nft-grid';
+                
+                generations[gen].forEach(entity => {
+                    const card = createNFTCard(entity);
+                    grid.appendChild(card);
+                });
+                
+                genDiv.appendChild(grid);
+                tree.appendChild(genDiv);
+            });
+        }
+        
+        function createNFTCard(entity) {
+            const card = document.createElement('div');
+            card.className = 'nft-card';
+            if (entity.isMutant) card.classList.add('mutant');
+            if (entity.burned) card.classList.add('burned');
+            
+            if (entity.burned) {
+                card.innerHTML = `
+                    <div class="nft-image" style="display:flex;align-items:center;justify-content:center;background:#333;">
+                        <span style="font-size:3em;">🔥</span>
+                    </div>
+                    <div class="nft-info">
+                        <div class="nft-name">NFT #${entity.id}</div>
+                        <div class="nft-detail">
+                            <span class="badge badge-burned">QUEIMADO</span>
+                        </div>
+                        <div class="nft-detail" style="opacity:0.5;margin-top:10px;">
+                            Esta entidade foi fundida para criar um novo NFT
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <img src="${entity.image}" class="nft-image" alt="${entity.name}" onclick="openModal('${entity.image}')">
+                    <div class="nft-info">
+                        <div class="nft-name">${entity.name}</div>
+                        <div class="nft-detail">
+                            <span class="badge badge-gen">Gen ${entity.generation}</span>
+                            ${entity.isMutant ? '<span class="badge badge-mutant">MUTANTE</span>' : ''}
+                        </div>
+                        <div class="nft-detail">
+                            <span>🎨 Cor:</span>
+                            <span style="color:rgb(${entity.colorR},${entity.colorG},${entity.colorB})">
+                                RGB(${entity.colorR},${entity.colorG},${entity.colorB})
+                            </span>
+                        </div>
+                        <div class="nft-detail">
+                            <span>🔷 Forma:</span>
+                            <span>${getShapeName(entity.shapeType)}</span>
+                        </div>
+                        ${entity.parent1 > 0 ? `
+                        <div class="nft-detail">
+                            <span>👨‍👩‍👧 Pais:</span>
+                            <span>#${entity.parent1} + #${entity.parent2}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            return card;
+        }
+        
+        function getShapeName(type) {
+            const shapes = ['Círculo', 'Triângulo', 'Quadrado', 'Elipse', 'Diamante'];
+            return shapes[type] || 'Desconhecido';
+        }
+        
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function exportTree() {
+            const data = JSON.stringify(allEntities, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'family_tree.json';
+            a.click();
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria Cosmic NFTs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a2e 0%, #000000 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; opacity: 0.7; margin-bottom: 30px; font-size: 1.2em; }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .nft-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .nft-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ffff;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .nft-image-container {
+            width: 100%;
+            height: 350px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .nft-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+        .nft-card:hover .nft-image {
+            transform: scale(1.1);
+        }
+        
+        .nft-info {
+            padding: 20px;
+        }
+        .nft-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nft-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        .nft-detail-label { opacity: 0.7; }
+        .nft-detail-value { font-weight: bold; color: #00ffff; }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        .download-btn:hover { transform: scale(1.02); }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+        }
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .loading { text-align: center; padding: 50px; font-size: 1.5em; }
+        .error { color: #ff4444; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 GALERIA CÓSMICA</h1>
+        <p class="subtitle">Coleção completa de entidades evolutivas</p>
+        
+        <div class="controls">
+            <button class="btn" onclick="downloadAll()">📥 Baixar Todas (PNG)</button>
+            <button class="btn" onclick="location.reload()">🔄 Atualizar</button>
+        </div>
+        
+        <div id="gallery" class="gallery"></div>
+    </div>
+    
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <img id="modalImage" class="modal-image" src="" alt="">
+        </div>
+    </div>
+
+    <script>
+        const CONTRACT_ADDRESS = "NOVO_ENDEREÇO_AQUI";
+        const RPC_URL = "https://liteforge.rpc.caldera.xyz/http";
+        
+        const ABI = [
+            "function nextTokenId() external view returns (uint256)",
+            "function getEntityInfo(uint256) external view returns (uint256,uint256,uint256,string,string)",
+            "function tokenURI(uint256) external view returns (string)"
+        ];
+        
+        let contract;
+        
+        function decodeBase64(str) {
+            const binaryString = atob(str);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+        
+        async function init() {
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+            await loadGallery();
+        }
+        
+        async function loadGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '<div class="loading">Carregando galeria cósmica...</div>';
+            
+            try {
+                const nextId = await contract.nextTokenId();
+                const total = Number(nextId) - 1;
+                
+                if (total === 0) {
+                    gallery.innerHTML = '<div class="loading">Nenhuma entidade na coleção ainda.</div>';
+                    return;
+                }
+                
+                gallery.innerHTML = '';
+                
+                for (let i = total; i >= 1; i--) {
+                    try {
+                        const info = await contract.getEntityInfo(i);
+                        const tokenURI = await contract.tokenURI(i);
+                        const base64Data = tokenURI.split(',')[1];
+                        const jsonStr = decodeBase64(base64Data);
+                        const metadata = JSON.parse(jsonStr);
+                        
+                        const card = document.createElement('div');
+                        card.className = 'nft-card';
+                        card.innerHTML = `
+                            <div class="nft-image-container" onclick="openModal('${metadata.image}')">
+                                <img src="${metadata.image}" class="nft-image" alt="${metadata.name}">
+                            </div>
+                            <div class="nft-info">
+                                <div class="nft-name">${metadata.name}</div>
+                                <div class="nft-detail">
+                                    <span class="nft-detail-label">🧬 Fase:</span>
+                                    <span class="nft-detail-value">${metadata.phase}</span>
+                                </div>
+                                <div class="nft-detail">
+                                    <span class="nft-detail-label">⚡ Power:</span>
+                                    <span class="nft-detail-value">${metadata.attributes[0].value}</span>
+                                </div>
+                                <div class="nft-detail">
+                                    <span class="nft-detail-label">✨ Rarity:</span>
+                                    <span class="nft-detail-value">${metadata.attributes[1].value}</span>
+                                </div>
+                                <div class="nft-detail">
+                                    <span class="nft-detail-label">🔄 Mutations:</span>
+                                    <span class="nft-detail-value">${metadata.mutations}</span>
+                                </div>
+                                <button class="download-btn" onclick="downloadNFT('${metadata.name}', '${metadata.image}')">
+                                    📥 Baixar PNG
+                                </button>
+                            </div>
+                        `;
+                        gallery.appendChild(card);
+                    } catch (e) {
+                        console.error(`Erro NFT #${i}:`, e);
+                    }
+                }
+            } catch (e) {
+                gallery.innerHTML = '<div class="error">Erro ao carregar: ' + e.message + '</div>';
+            }
+        }
+        
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function downloadNFT(name, imageSrc) {
+            const link = document.createElement('a');
+            link.href = imageSrc;
+            link.download = name.replace(/\s+/g, '_') + '.svg';
+            link.click();
+        }
+        
+        async function downloadAll() {
+            alert("📥 Para baixar todas as imagens em PNG:\n\n1. Exporte os SVGs:\n   node scripts/export_svg.js all\n\n2. Converta para PNG:\n   python3 scripts/convert_to_png.py\n\n3. Abra a pasta:\n   xdg-open nft-images/png/");
+        }
+        
+        window.onload = init;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+</body>
+</html>

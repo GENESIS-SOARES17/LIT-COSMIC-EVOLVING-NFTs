@@ -1,0 +1,24 @@
+{
+  "name": "cosmic-evolving-nfts",
+  "version": "1.0.0",
+  "description": "NFTs Evolutivos Cósmicos na LitVM",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js --network liteforge",
+    "mint": "npx hardhat run scripts/mint.js --network liteforge",
+    "view": "node scripts/view_nft.js",
+    "export-svg": "node scripts/export_svg.js",
+    "evolve": "npx hardhat run scripts/evolve_check.js --network liteforge",
+    "bot": "node scripts/bot.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.19.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.6.1"
+  }
+}
